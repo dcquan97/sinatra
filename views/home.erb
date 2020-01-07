@@ -1,7 +1,18 @@
-Xin chao!
 
-Ban Da Dang Nhap Thanh Cong.
-
-<form action="/home" method="post">
-  <input type="submit" value="Log Out" name="logout">
+<form action="/logout" method="POST">
+  <input type="submit" value="Logout" />
 </form>
+<div class="col-md-6 col-md-offset-3">
+      <ul class="list-group" id="list-notes">
+        <% @users.each do |note| %>
+          <li class="list-group-item clearfix">
+            <div class="col-md-11">
+              <p><%= note.Email %></p>
+              <p><%= note.Password %></p>
+              <p><%= note.id %></p>
+              <p><i>Created at: <%= note.created_at %></i></p>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
