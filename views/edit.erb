@@ -1,0 +1,13 @@
+<div class="col-md-6 col-md-offset-3">
+  <form action="/users/<%= @user.id %>" method="post">
+    <input type="hidden" name="_method" value="put">
+    <textarea placeholder="Write Email here..." class="form-control" name="Email">
+      <%= @user.Email %>
+    </textarea>
+    <textarea placeholder="Write Password here..." class="form-control" name="Password">
+      <%= @user.Password %>
+    </textarea>
+
+    <input type="submit" value="Update" class="btn-primary form-control">
+  </form>
+</div>

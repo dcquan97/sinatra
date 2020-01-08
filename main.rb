@@ -2,54 +2,46 @@ require "sinatra"
 require "sinatra/activerecord"
 require "./models/note"
 require 'pry'
+require 'devise'
 
 set :database, {adapter: "sqlite3", database: "noteapp.sqlite3"}
-
+set :session_secret, "12332313131"
 enable :sessions
-set :sessions, :expire_after => 300
+set :sessions, expire_after: 900
 
-helpers do
-  def current_user
-    if session[:user_id]
-      User.find {users.id == session[:user_id]}
-    else
-      nil
-    end
-  end
-end
 
 get '/' do
-  #binding.pry
-  if current_user
-    @users = User.all
-    erb :home
+  @error_message = params[:error]
+  if !session[:user_id]
+    erb :login
   else
-    redirect "/login"
+    redirect '/home'
   end
 end
 
 get '/login' do
-  if current_user
-    @users = User.all
-    erb :home
-  else
+  @error_message = params[:error]
+  if !session[:user_id]
     erb :login
+  else
+    redirect '/home'
   end
 end
 
 get '/home' do
-  @users = User.all
-  erb :home
+  if !session[:user_id]
+    redirect '/login'
+  else
+    erb :home
+  end
+
 end
 
 post '/login' do
-
- users = User.where(Email: params[:Email], Password: params[:Password])
-  if users != nil
-    user = users.first
-    # response.set_cookie("user_id", value: user.id, expires: Time.now + 60*60*24*365 )
-    session["user_id"] = user.id
-    @users = User.all
+  user = User.find_by(Email: params[:Email])
+  #binding.pry
+  if user && user.Password == params[:Password]
+    session[:user_id] = user.id
     redirect '/'
   else
     @error = true
@@ -62,17 +54,58 @@ get '/signup' do
 end
 
 post '/signup' do
-  @user = User.new(Email: params[:email], Password: params[:password])
-  @user.save
+  @user = User.create(Email: params[:email], Password: params[:password])
+  session[:user_id] = @user.id
 
   redirect '/'
 end
 
-post '/logout' do
+get '/logout' do
+  if session[:user_id] != nil
+      session.clear
+      redirect to '/login'
+  else
+      redirect to '/'
+  end
+end
+get "/users/:id/edit" do
+  @user = User.find params[:id]
+  erb :edit
+end
+
+put "/users/:id" do
+  @user = User.find params[:id]
+  if @user.update_attributes(Email: params[:Email], Password: params[:Password])
+    redirect "/"
+  else
+    erb :edit
+  end
+end
+
+delete "/users/:id" do
+  User.destroy params[:id]
   session.clear
-  # response.set_cookie("user_id", value: "", expires: Time.now - 100 )
-  redirect '/'
+  redirect "/"
 end
+
+
+helpers do
+  def redirect_if_not_logged_in
+    if !logged_in?
+      redirect "/login?error=You have to be logged in to do that"
+    end
+  end
+
+  def logged_in?
+    !!session[:user_id]
+  end
+
+  def current_user
+    User.find_by(id: session[:user_id])
+  end
+end
+
+
 
 not_found do
   status 404
