@@ -1,7 +1,4 @@
-require "sinatra/activerecord/rake"
+ENV["SINATRA_ENV"] ||= "development"
 
-namespace :db do
-  task :load_config do
-    require "./main"
-  end
-end
+require_relative './config/environment'
+require 'sinatra/activerecord/rake'

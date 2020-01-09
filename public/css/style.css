@@ -531,8 +531,5 @@ input[type="submit"]:hover {
 		padding: 14px 50px 14px 50px;
 		font-size: 14px;
 	}
-  .delete-form {
-  display: inline;
-  }
-}
+
 /*--//responsive--*/

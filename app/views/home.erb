@@ -3,9 +3,7 @@
       <head>
         <title>My Account</title>
         <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="<stylehome.css>
-
-        </style>">
+        <link rel="stylesheet" type="text/css" href="<style_home.css></style>">
       </head>
       <body>
         <div class="container">
@@ -17,11 +15,10 @@
 </form>
 <div class="col-md-6 col-md-offset-3">
       <ul class="list-group" id="list-notes">
-        <% #@users.map do  |current_user|%>
           <li class="list-group-item clearfix">
             <div class="col-md-11">
-              <p><%= current_user.Email %></p>
-              <p><%= current_user.Password %></p>
+              <p><%= current_user.email %></p>
+              <p><%= current_user.password %></p>
               <p><i>Created at: <%= current_user.created_at %></i></p>
             </div>
             <div>
@@ -32,7 +29,6 @@
               </form>
             </div>
           </li>
-        <% #end %>
       </ul>
     </div>
 </div>
